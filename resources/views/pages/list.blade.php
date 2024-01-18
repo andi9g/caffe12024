@@ -11,9 +11,7 @@
    <div class="card">
       <div class="card-header">
          <div class="row">
-            <div class="col-md-5">
-               <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#tambahmenu">Tambah Menu</button>
-            </div>
+            
             <div class="col-md-7">
                <form action="{{ url()->current() }}">
                   <div class="row">
@@ -31,25 +29,31 @@
                         <div class="input-group">
                            <input class="form-control" type="text" name="keyword" placeholder="nama list menu" aria-label="nama list menu" value="{{ $keyword }}" aria-describedby="keyword">
                            <div class="input-group-append">
-                              <button type="submit" class="input-group-text px-3" id="keyword"> Cari </button>
+                              <button type="submit" class="input-group-text px-3 bg-danger" id="keyword"> Cari </button>
                            </div>
                         </div>
                      </div>
                   </div>
                </form>
             </div>
+
+            <div class="col-md-5 text-right">
+               <button class="btn btn-success" type="button" data-toggle="modal" data-target="#tambahmenu"><b>
+                  <i class="fa fa-plus"></i>
+               </b></button>
+            </div>
          </div>
       </div>
 
       <div class="card-body">
          <table class="table table-bordered table-striped table-hover table-lg">
-            <thead>
+            <thead class="bg-danger">
                <tr>
                   <th width="5px">No</th>
                   <th width="100px">Gambar</th>
                   <th>Nama List Menu</th>
                   <th>Harga</th>
-                  <th>Menu</th>
+                  <th>Keterangan</th>
                   <th>Aksi</th>
                </tr>
             </thead>
@@ -65,7 +69,7 @@
                      <td>Rp{{ number_format($item->harga, 0, ",", ".") }}</td>
                      <td>{{ ucwords($item->menu->namamenu) }}</td>
                      <td>
-                        <form action='{{ route('list.destroy', [$item->idlist]) }}' method='post' class='d-inline'>
+                        <form action='{{ route('list.destroy', [$item->idlist]) }}' method='post' class=''>
                              @csrf
                              @method('DELETE')
                              <button type='submit' onclick="return confirm('hapus?')" class='badge badge-danger badge-btn border-0 py-1'>

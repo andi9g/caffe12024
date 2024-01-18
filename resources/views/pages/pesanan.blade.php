@@ -9,9 +9,106 @@
 
 <div class="container-fluid">
    <div class="row">
+      
+      <div class="col-md-8">
+         <div class="card">
+            <div class="card-header bg-danger">
+               <div class="row">
+                  <div class="col-md-4">
+                     <h3 class="py-0 my-0">LIST MENU</h3>
+                  </div>
+                  <div class="col-md-8">
+                     <form action="{{ route('cari.menu', []) }}" method="get">
+                        <div class="row">
+                           <div class="col-md-5">
+                              <input type="text" hidden value="{{ $idmeja }}" name="idmeja">
+                              <select id="menu" class="form-control" onchange="submit()" name="menu">
+                                 <option value="">Semua Menu</option>
+                                 @foreach ($datamenu as $dm)
+                                     <option value="{{ $dm->namamenu }}" @if ($dm->namamenu == $menu)
+                                         selected
+                                     @endif>{{ ucwords($dm->namamenu) }}</option>
+                                 @endforeach
+                              </select>
+                           </div>
+                           <div class="col-md-7">
+                              <div class="input-group">
+                                 <input class="form-control" type="text" name="keyword" placeholder="masukan nama list" value="{{ $keyword }}" aria-label="masukan nama list" aria-describedby="keyword">
+                                 <div class="input-group-append">
+                                    <button type="submit" class="input-group-text" id="keyword">
+                                       <i class="fa fa-search"></i>
+                                    </button>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+
+                     </form>
+                  </div>
+               </div>
+            </div>
+            <div class="card-body" style="height: 500px;overflow-y: scroll">
+               <div class="row">
+                  @foreach ($list as $item)
+                      <div class="col-md-4">
+                        <div class="card">
+                           
+                           <div class="card-body">
+                              <img src="{{ url('gambar', [$item->gambar]) }}" width="100%"  alt="">
+                           </div>
+                           <div class="card-footer p-1">
+                              <h4 class="px-3 text-bold">{{ $item->namalist }}</h4>
+                              <h5 class="px-3">Rp{{ number_format($item->harga, 0,",",".") }}</h5>
+   
+                              @if (!empty($idmeja))
+                                  <button class="btn btn-block btn-success" type="button" data-toggle="modal" data-target="#pesan{{ $item->idlist }}">TAMBAH PESANAN</button>
+                              @else
+                              <button type="button" disabled class="btn btn-block btn-danger">SILAHKAN MEMILIH MEJA</button>
+                              @endif
+
+                           </div>
+
+                        </div>
+                      </div>
+
+
+                      <div id="pesan{{ $item->idlist }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="my-modal-title" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                           <div class="modal-content">
+                              <div class="modal-header">
+                                 <h5 class="modal-title" id="my-modal-title">{{ $item->namalist }}</h5>
+                                 <button class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                 </button>
+                              </div>
+                              <form action="{{ route('tambah.pesanan', []) }}" method="post">
+                                 @csrf
+                                 <div class="modal-body">
+                                    <input type="number" name="idmeja" value="{{ $idmeja }}" hidden id="">
+                                    <input type="number" name="idlist" value="{{ $item->idlist }}" hidden id="">
+   
+                                    <div class="form-group">
+                                       <label for="jumlah">Masukan Jumlah</label>
+                                       <input id="jumlah" class="form-control" type="number" value="1" name="jumlah">
+                                    </div>
+   
+                                 </div>
+                                 <div class="modal-footer">
+                                    <button type="submit" class="btn btn-success">Tambah</button>
+                                 </div>
+                              </form>
+                           </div>
+                        </div>
+                      </div>
+                  @endforeach
+               </div>
+            </div>
+         </div>
+      </div>
+
       <div class="col-md-4">
          <div class="card">
-            <div class="card-header">
+            <div class="card-header bg-danger">
                <h3 class="my-0 py-0">PESANAN</h3>
             </div>
             <div class="card-body">
@@ -117,101 +214,6 @@
             @endif
          </div>
 
-         </div>
-      </div>
-      <div class="col-md-8">
-         <div class="card">
-            <div class="card-header">
-               <div class="row">
-                  <div class="col-md-4">
-                     <h3 class="py-0 my-0">LIST MENU</h3>
-                  </div>
-                  <div class="col-md-8">
-                     <form action="{{ route('cari.menu', []) }}" method="get">
-                        <div class="row">
-                           <div class="col-md-5">
-                              <input type="text" hidden value="{{ $idmeja }}" name="idmeja">
-                              <select id="menu" class="form-control" onchange="submit()" name="menu">
-                                 <option value="">Semua Menu</option>
-                                 @foreach ($datamenu as $dm)
-                                     <option value="{{ $dm->namamenu }}" @if ($dm->namamenu == $menu)
-                                         selected
-                                     @endif>{{ ucwords($dm->namamenu) }}</option>
-                                 @endforeach
-                              </select>
-                           </div>
-                           <div class="col-md-7">
-                              <div class="input-group">
-                                 <input class="form-control" type="text" name="keyword" placeholder="masukan nama list" value="{{ $keyword }}" aria-label="masukan nama list" aria-describedby="keyword">
-                                 <div class="input-group-append">
-                                    <button type="submit" class="input-group-text" id="keyword">
-                                       <i class="fa fa-search"></i>
-                                    </button>
-                                 </div>
-                              </div>
-                           </div>
-                        </div>
-
-                     </form>
-                  </div>
-               </div>
-            </div>
-            <div class="card-body" style="height: 500px;overflow-y: scroll">
-               <div class="row">
-                  @foreach ($list as $item)
-                      <div class="col-md-4">
-                        <div class="card">
-                           
-                           <div class="card-body">
-                              <img src="{{ url('gambar', [$item->gambar]) }}" width="100%"  alt="">
-                           </div>
-                           <div class="card-footer p-1">
-                              <h4 class="px-3 text-bold">{{ $item->namalist }}</h4>
-                              <h5 class="px-3">Rp{{ number_format($item->harga, 0,",",".") }}</h5>
-   
-                              @if (!empty($idmeja))
-                                  <button class="btn btn-block btn-success" type="button" data-toggle="modal" data-target="#pesan{{ $item->idlist }}">TAMBAH PESANAN</button>
-                              @else
-                              <button type="button" disabled class="btn btn-block btn-danger">SILAHKAN MEMILIH MEJA</button>
-                              @endif
-
-                           </div>
-
-                        </div>
-                      </div>
-
-
-                      <div id="pesan{{ $item->idlist }}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="my-modal-title" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                           <div class="modal-content">
-                              <div class="modal-header">
-                                 <h5 class="modal-title" id="my-modal-title">{{ $item->namalist }}</h5>
-                                 <button class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                 </button>
-                              </div>
-                              <form action="{{ route('tambah.pesanan', []) }}" method="post">
-                                 @csrf
-                                 <div class="modal-body">
-                                    <input type="number" name="idmeja" value="{{ $idmeja }}" hidden id="">
-                                    <input type="number" name="idlist" value="{{ $item->idlist }}" hidden id="">
-   
-                                    <div class="form-group">
-                                       <label for="jumlah">Masukan Jumlah</label>
-                                       <input id="jumlah" class="form-control" type="number" value="1" name="jumlah">
-                                    </div>
-   
-                                 </div>
-                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-success">Tambah</button>
-                                 </div>
-                              </form>
-                           </div>
-                        </div>
-                      </div>
-                  @endforeach
-               </div>
-            </div>
          </div>
       </div>
    </div>
