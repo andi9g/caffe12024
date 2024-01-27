@@ -208,7 +208,6 @@
                @csrf
                <input type="number" hidden value="{{ $idmeja }}" name="idmeja">
 
-               <button type="submit" class="btn btn-block btn-secondary" onclick="return confirm('tekan ya untuk melanjutkan proses')">BAYAR LUNAS</button>
             </form>
                 
             @endif

@@ -169,27 +169,32 @@
             <div class="modal-body">
                <div class="form-group">
                   <label for="namalist">Nama List Menu</label>
-                  <input id="namalist" class="form-control" type="text" name="namalist" placeholder="masukan nama list menu">
+                  <input id="namalist" class="form-control" type="text" value="{{ old('namalist') }}" name="namalist" placeholder="masukan nama list menu">
                </div>
 
                <div class="form-group">
                   <label for="idmenu">Menu</label>
                   <select id="idmenu" class="form-control" name="idmenu">
                      @foreach ($datamenu as $dm)
-                        <option value="{{ $dm->idmenu }}">{{ strtoupper($dm->namamenu) }}</option>
+                        <option value="{{ $dm->idmenu }}" @if ($dm->idmenu == old('idmenu'))
+                            selected
+                        @endif>{{ strtoupper($dm->namamenu) }}</option>
                      @endforeach
                   </select>
                </div>
 
                <div class="form-group">
                   <label for="harga">Harga</label>
-                  <input id="harga" class="form-control" type="number" name="harga" placeholder="masukan harga">
+                  <input id="harga" class="form-control" value="{{ old('harga') }}" type="number" name="harga" placeholder="masukan harga">
                </div>
 
+               
                <div class="form-group">
                   <label for="gambar">Pilih Gambar</label>
-                  <input id="gambar" class="form-control-file" type="file" name="gambar">
+                  <input id="gambar" class="form-control-file" value="{{ old('gambar') }}" type="file" name="gambar">
+                  <small class=""><i>Maksimal adalah 500Kb</i></small>
                </div>
+               
             </div>
             <div class="modal-footer">
                <button type="submit" class="btn btn-success">

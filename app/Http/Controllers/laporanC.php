@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\pendapatanM;
+use App\Models\pesananM;
 use Illuminate\Http\Request;
 use PDF;
 use Carbon\Carbon;
@@ -24,9 +25,28 @@ class laporanC extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function kwitansi(Request $request, $idmeja)
+    {
+        $laporan = pesananM::where("pesanan.idmeja", $idmeja)
+                     ->join("list", "list.idlist", "pesanan.idlist")
+                     ->select("pesanan.*")
+                     ->selectRaw("list.harga * pesanan.jumlah as total")
+                     ->get();
+
+        $pdf = PDF::loadView("pages.laporan.kwitansi", [
+            "laporan" => $laporan,
+            "idmeja" => $idmeja,
+        ]);
+
+        return $pdf->stream("laporan.pdf");
+
+
+
+    }
+
     public function cetak(Request $request)
     {
-        try{
+    try{
             $tanggalAwal = Carbon::parse($request->tanggalawal." 01:00");
             $tanggalAkhir = Carbon::parse($request->tanggalakhir. "23:00");
             

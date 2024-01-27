@@ -37,6 +37,7 @@ Route::middleware(['auth'])->group(function () {
     
     Route::get("laporan", "laporanC@index");
     Route::get("laporan/cetak", "laporanC@cetak")->name("cetak");
+    Route::get("kwitansi/{idmeja}", "laporanC@kwitansi")->name("cetak.kwitansi");
     
     
     

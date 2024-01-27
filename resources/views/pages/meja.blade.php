@@ -89,6 +89,26 @@
                         <th>ubah</th>
                      </tr>
                   </thead>
+
+                  @php
+                      $lunas = DB::table("bayarsatuan")->where("idmeja", $m->idmeja)
+                      ->join("list", "list.idlist", "bayarsatuan.idlist")
+                      ->select("list.namalist", "list.harga")
+                      ->selectRaw("sum(bayarsatuan.jumlah) as jumlah")
+                      ->groupBy("list.namalist", "list.harga","bayarsatuan.idlist")
+                      ->get()
+                  @endphp
+
+                  @foreach ($lunas as $ls)
+                      <tr>
+                        <td>#</td>
+                        <td>{{ $ls->namalist }}</td>
+                        <td>{{ $ls->jumlah }}</td>
+                        <td>{{ $ls->harga }}</td>
+                        <td>LUNAS</td>
+                      </tr>
+                  @endforeach
+
                   @php
                      $pesanan = App\Models\pesananM::where("pesanan.idmeja", $m->idmeja)
                      ->join("list", "list.idlist", "pesanan.idlist")
@@ -104,11 +124,11 @@
                         <td>{{ $pesan->jumlah }}</td>
                         <td>Rp{{ number_format($pesan->total, 0, ",", ".") }}</td>
                         <td>
-                           
-   
                            <form action="{{ route('bayarsatuan.pesanan', []) }}" method="post" class="d-inline">
                               @csrf
                               <input type="number" hidden value="{{ $pesan->idpesanan }}" name="idpesanan">
+                              <input type="number" name="jumlahselesai" value="1" min="1" max="{{ $pesan->jumlah }}" class="text-center" style="border:none;">
+   
                
                               <button type="submit" class="badge badge-btn py-1 border-0 badge-success" onclick="return confirm('Bayar satuan?')">
                                  <i class="fa fa-check"></i>
@@ -154,6 +174,11 @@
    
                   <button type="submit" class="btn btn-block btn-secondary" onclick="return confirm('tekan ya untuk melanjutkan proses')">BAYAR LUNAS</button>
                </form>
+               <br>
+
+               <a href="{{ route('cetak.kwitansi', [$m->idmeja]) }}" class="btn btn-block btn-danger">
+                  CETAK KWITANSI
+               </a>
             </div>
          </div>
       </div>

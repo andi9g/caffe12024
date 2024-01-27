@@ -48,6 +48,14 @@ class Caffe extends Migration
             $table->integer("jumlah");
             $table->timestamps();
         });
+        
+        Schema::create('bayarsatuan', function (Blueprint $table) {
+            $table->bigIncrements('idbayarsatuan');
+            $table->integer("idmeja");
+            $table->integer("jumlah");
+            $table->integer("idlist");
+            $table->timestamps();
+        });
 
         Schema::create('meja', function (Blueprint $table) {
             $table->bigIncrements('idmeja');

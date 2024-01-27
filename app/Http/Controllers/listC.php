@@ -53,6 +53,13 @@ class listC extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            "namalist" => 'required',
+            "idmenu" => 'required',
+            "harga" => 'required',
+            "gambar" => 'required',
+        ]);
+
         try{
             $data = $request->all();
 
@@ -64,7 +71,10 @@ class listC extends Controller
 
                 $ex = strtolower($extensi);
 
-                if($ex == "jpg" || $ex == "jpeg" || $ex == "png") {
+                if(($ex == "jpg" || $ex == "jpeg" || $ex == "png")) {
+                    if($size > 512000) {
+                        return redirect()->back()->with('error', 'Size maximal 500Kb');
+                    }
                     $file->move(public_path("gambar"), $data["gambar"]);
                 }else{
                     return redirect()->back()->with('error', 'Format bukan gambar');

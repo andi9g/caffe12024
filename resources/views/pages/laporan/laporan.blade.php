@@ -13,6 +13,14 @@
          margin: 0;
          padding: 0;
       }
+      h2 {
+         margin: 0;
+         padding: 0;
+      }
+      h3 {
+         margin: 0;
+         padding: 0;
+      }
       p {
          margin: 0;
          padding: 0;
@@ -27,8 +35,19 @@
    </style>
 </head>
 <body>
-   <h1>LAPORAN PENDAPATAN</h1>
-   <p>{{ $tanggalAwal->isoFormat("DD MMMM Y") }} s.d {{ $tanggalAkhir->isoFormat("DD MMMM Y") }}</p>
+   <table width="100%">
+      <tr>
+         <td valign="top" width="70px">
+            <img src="{{ url('gambar', ['logo.png']) }}" width="100%" alt="">
+         </td>
+         <td valign="top" style="padding: auto 10px">
+            <h2>LAPORAN PENDAPATAN</h2>
+            <h3>CAFFE WAROENG KOLU</h3>
+            <p>{{ $tanggalAwal->isoFormat("DD MMMM Y") }} s.d {{ $tanggalAkhir->isoFormat("DD MMMM Y") }}</p>
+         </td>
+      </tr>
+   </table>
+   <br>
 
 
    <table border="1" width="100%">

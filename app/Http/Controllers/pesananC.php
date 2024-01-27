@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\pesananM;
 use App\Models\pendapatanM;
+use App\Models\bayarsatuanM;
 use App\Models\mejaM;
 use App\Models\listM;
 use App\Models\menuM;
@@ -39,17 +40,44 @@ class pesananC extends Controller
     {
         try{
             $idpesanan = $request->idpesanan;
+            $jumlahselesai = $request->jumlahselesai;
             $pesanan = pesananM::where('idpesanan', $idpesanan)->get();
 
             foreach ($pesanan as $item) {
-                $tambah = new pendapatanM;
-                $tambah->idlist = $item->idlist;
-                $tambah->jumlah = $item->jumlah;
-                $tambah->save();
+                if($jumlahselesai < $item->jumlah  ) {
+                    $tambah = new pendapatanM;
+                    $tambah->idlist = $item->idlist;
+                    $tambah->jumlah = $jumlahselesai;
+                    $tambah->save();
+                    if($tambah) {
+                        $tambahsatuan = new bayarsatuanM;
+                        $tambahsatuan->idmeja = $item->idmeja;
+                        $tambahsatuan->jumlah = $jumlahselesai;
+                        $tambahsatuan->idlist = $item->idlist;
+                        $tambahsatuan->save();
 
-                if($tambah) {
-                    pesananM::where("idpesanan", $item->idpesanan)->delete();
+                        pesananM::where("idpesanan", $item->idpesanan)->first()->update([
+                            "jumlah" => $item->jumlah - $jumlahselesai,
+                        ]);
+                    }
+                }else {
+                    $tambah = new pendapatanM;
+                    $tambah->idlist = $item->idlist;
+                    $tambah->jumlah = $item->jumlah;
+                    $tambah->save();
+                    if($tambah) {
+                        $ambil = bayarsatuanM::where("idlist", $item->idlist)->where("idmeja", $item->idmeja)->first();
+                        
+                        $ambil->update([
+                            "jumlah" => $ambil->jumlah + $jumlahselesai,
+                        ]);
+
+                        pesananM::where("idpesanan", $item->idpesanan)->delete();
+                    }
                 }
+
+
+                
             }
 
             return redirect()->back()->with('toast_success', 'Success');
@@ -66,11 +94,15 @@ class pesananC extends Controller
             $idmeja = $request->idmeja;
             $pesanan = pesananM::where('idmeja', $idmeja)->get();
 
+            bayarsatuanM::where("idmeja", $idmeja)->delete();
+
             foreach ($pesanan as $item) {
                 $tambah = new pendapatanM;
                 $tambah->idlist = $item->idlist;
                 $tambah->jumlah = $item->jumlah;
                 $tambah->save();
+
+                
 
                 if($tambah) {
                     pesananM::where("idpesanan", $item->idpesanan)->delete();
