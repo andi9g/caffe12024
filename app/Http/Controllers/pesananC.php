@@ -66,11 +66,20 @@ class pesananC extends Controller
                     $tambah->jumlah = $item->jumlah;
                     $tambah->save();
                     if($tambah) {
-                        $ambil = bayarsatuanM::where("idlist", $item->idlist)->where("idmeja", $item->idmeja)->first();
-                        
-                        $ambil->update([
-                            "jumlah" => $ambil->jumlah + $jumlahselesai,
-                        ]);
+                        $cek = bayarsatuanM::where("idlist", $item->idlist)->where("idmeja", $item->idmeja)->count();
+                        if($cek > 0 ) {
+                            $ambil = bayarsatuanM::where("idlist", $item->idlist)->where("idmeja", $item->idmeja)->first();
+                            
+                            $ambil->update([
+                                "jumlah" => $ambil->jumlah + $jumlahselesai,
+                            ]);
+                        }else {
+                            $tambahsatuan = new bayarsatuanM;
+                            $tambahsatuan->idmeja = $item->idmeja;
+                            $tambahsatuan->jumlah = $jumlahselesai;
+                            $tambahsatuan->idlist = $item->idlist;
+                            $tambahsatuan->save();
+                        }
 
                         pesananM::where("idpesanan", $item->idpesanan)->delete();
                     }
